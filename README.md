@@ -11,4 +11,4 @@ To install this you need:
     * [NFSMW Extra Options](https://github.com/ExOptsTeam/NFSMWExOpts)
     * [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader)
 
-When you have installed the ASI loader, download `healthbars.asi` and copy it into the `scripts` folder in the game directory.
+When you have installed the ASI loader, download [`healthbars.asi`](https://github.com/trelbutate/MWHealthbars/releases) and copy it into the `scripts` folder in the game directory.
