@@ -10,6 +10,8 @@
 #define GETVARPTR(type, ptr, offset) ( (type*)(void*)((int)(ptr) + (offset)) )
 #define GETVAR(type, ptr, offset) *(GETVARPTR(type, ptr, offset))
 
+#define HALF_PI 1.5708f
+
 const int** copCarTable = (const int**)0x92ce9c;
 const int* numCopCars = (const int*)0x92cea4;
 const float* deltaTime = (const float*)0x9259bc;
@@ -66,16 +68,14 @@ void HealthbarRenderer::UpdateCopCars() {
 				copCar->healthReduceCountdown = 0.5;
 			}
 		}
-		else {
-			copCar = copCar;
-		}
+
 		void* vehicle = DEREF((int)copCarPtr - 0x80, 0x4c);
 		void* vehicleB = DEREF(vehicle, 0x30);
 		void* vehicleC = DEREF(vehicleB, 0x0);
 		copCar->position = GETVAR(D3DXVECTOR3, vehicleC, 0x10);
 
-		int what = GETVAR(int, copCarPtr, 0x84);
-		if (what == 0) {
+		int carState = GETVAR(int, copCarPtr, 0x84);
+		if (carState == 0) {
 			if (copCar->disabledTimer == 0.f)
 				copCar->disabledTimer = 0.0001f;
 		}
@@ -171,8 +171,8 @@ void HealthbarRenderer::Draw()
 
 		if (car->health <= 0) {
 			// Flash when dead
-			float x = fmodf(car->deathTimer, 0.4f) / 0.2f;
-			alpha *= 1.f - sinf(x);
+			float x = car->deathTimer / 0.05f + HALF_PI;
+			alpha *= sinf(x) / 2.f + 0.5f;
 		}
 
 		D3DXVECTOR3 barWorldPos = D3DXVECTOR3(car->position[2], -car->position[0], car->position[1] + height);
