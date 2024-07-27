@@ -269,16 +269,19 @@ void HealthbarRenderer::UpdateState()
 	D3DXMatrixInverse(&projMat, NULL, viewMat);
 	D3DXMatrixMultiply(&projMat, &projMat, viewProjMat);
 
+	pursuitActive = false;
 	void* soundAi = DEREF(0x993cc8, 0);
 	if (soundAi) {
 		void* pursuitAi = DEREF(soundAi, 0x130);
 		pursuitActive = pursuitAi != nullptr;
-		if (pursuitActive) {
-			pursuitActiveCounter += *deltaTime;
-		}
-		else {
-			pursuitActiveCounter = 0;
-		}
+	}
+
+	if (pursuitActive) {
+		pursuitActiveCounter += *deltaTime;
+	}
+	else {
+		pursuitActiveCounter = 0;
+		copCars.clear();
 	}
 
 	// Figure out if "Game moment camera" is enabled in the options to determine when to start showing healthbars on pursuit start
