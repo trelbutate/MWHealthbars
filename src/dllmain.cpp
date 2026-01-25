@@ -7,12 +7,13 @@ HealthbarRenderer renderer;
 
 typedef void (*DrawGUI)(bool someValue);
 
-DrawGUI realDrawGUIFunc = (DrawGUI)0x6e6e40;
+DrawGUI realDrawGUIFunc = (DrawGUI)nullptr;
 
 void DrawGUIHook(bool someValue) {
     if (!someValue)
         renderer.Draw();
-    realDrawGUIFunc(someValue);
+    if(realDrawGUIFunc)
+        realDrawGUIFunc(someValue);
 }
 
 void HookFunction() {
@@ -21,6 +22,10 @@ void HookFunction() {
     DWORD previous;
     void* instrAddress = (void*)0x6e75a7;
     VirtualProtect(instrAddress, 4, PAGE_READWRITE, &previous);
+
+    int currentFunctionAddress = *(int*)((int)instrAddress + 1);
+    currentFunctionAddress += (int)instrAddress + 5;
+    realDrawGUIFunc = (DrawGUI)currentFunctionAddress;
 
     void* targetFunctionAddress = (void*)DrawGUIHook;
     int diff = ((int)targetFunctionAddress - (int)instrAddress - 5);
